@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Rastreadores de IA generativa — permitidos para GEO/AEO
+User-agent: GPTBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: Google-Extended
+Allow: /
+
+Sitemap: https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/sitemap.xml
+
+# llms.txt: https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/llms.txt
+# Va como comentario y no como directiva "LLMs:": no está en el estándar del
+# Robots Exclusion Protocol y los validadores (Lighthouse incluido) la marcan
+# como directiva desconocida. El fichero se sirve igual en esa URL.

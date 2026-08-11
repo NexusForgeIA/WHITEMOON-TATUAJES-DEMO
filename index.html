@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>WhiteMoon — Estudio de tatuajes</title>
+<meta name="description" content="Estudio de tatuajes en el noroeste de Madrid: diseño personalizado, realismo, blackwork y coberturas. Pide tu boceto con el agente IA, sin compromiso.">
+<meta name="author" content="WhiteMoon">
+<meta name="robots" content="index, follow, max-image-preview:large">
+<meta name="theme-color" content="#0C0C0C">
+<link rel="canonical" href="https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/">
+<link rel="alternate" hreflang="es" href="https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/">
+<link rel="alternate" hreflang="x-default" href="https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/">
+
+<!-- Señales GEO -->
+<meta name="geo.region" content="ES-MD">
+<meta name="geo.placename" content="Majadahonda, Madrid, España">
+<meta name="ICBM" content="40.4737, -3.8716">
+
+<!-- Open Graph -->
+<meta property="og:type" content="website">
+<meta property="og:locale" content="es_ES">
+<meta property="og:site_name" content="WhiteMoon">
+<meta property="og:url" content="https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/">
+<meta property="og:title" content="WhiteMoon — Estudio de tatuajes">
+<meta property="og:description" content="Estudio de tatuajes en el noroeste de Madrid: diseño personalizado, realismo, blackwork y coberturas. Pide tu boceto con el agente IA, sin compromiso.">
+<meta property="og:image" content="https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/assets/img/og-tatuajes.jpg">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Tatuador con guante negro tatuando el brazo de un cliente">
+
+<!-- Twitter -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="WhiteMoon — Estudio de tatuajes">
+<meta name="twitter:description" content="Estudio de tatuajes en el noroeste de Madrid: diseño personalizado, realismo, blackwork y coberturas. Pide tu boceto con el agente IA, sin compromiso.">
+<meta name="twitter:image" content="https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/assets/img/og-tatuajes.jpg">
+
+<!--
+  Kanit va autoalojada en assets/fonts (subset latin). Se precarga solo el
+  peso 900, que es el del titular del hero: así el texto ya se pinta con la
+  tipografía definitiva y no hay reflow al llegar la fuente. El resto de
+  pesos entra por CSS con font-display:swap.
+  Las fotos también son locales: nada de hotlink a Unsplash en caliente.
+-->
+<!-- Sin favicon el navegador pide /favicon.ico igualmente y el 404 acaba en
+     la consola (y en el informe de Lighthouse). Se declaran los tres. -->
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+<link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+
+<link rel="preload" href="assets/fonts/kanit-900-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/img/hero-tatuaje.jpg" as="image" fetchpriority="high">
+<link rel="stylesheet" href="assets/css/styles.css">
+
+<!--
+  JSON-LD en un único @graph: evita FAQPage duplicados y mantiene una sola
+  fuente por entidad. TattooParlor es subtipo válido de LocalBusiness. Las
+  respuestas del FAQPage son texto plano, sin etiquetas inline, y coinciden
+  palabra por palabra con el DOM visible de "Preguntas frecuentes".
+-->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "TattooParlor",
+      "@id": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#negocio",
+      "name": "WhiteMoon",
+      "description": "Estudio de tatuajes en el noroeste de Madrid: diseño personalizado, realismo y color, blackwork, línea fina y coberturas de tatuajes antiguos, con material esterilizado de un solo uso. Demo de WhiteMoon Agencia IA.",
+      "url": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/",
+      "image": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/assets/img/og-tatuajes.jpg",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Majadahonda",
+        "addressRegion": "Madrid",
+        "addressCountry": "ES"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 40.4737104,
+        "longitude": -3.8715623
+      },
+      "areaServed": [
+        { "@type": "City", "name": "Majadahonda" },
+        { "@type": "City", "name": "Las Rozas de Madrid" },
+        { "@type": "City", "name": "Pozuelo de Alarcón" },
+        { "@type": "City", "name": "Boadilla del Monte" },
+        { "@type": "City", "name": "Torrelodones" }
+      ],
+      "telephone": "+34643199580",
+      "email": "comercial@whitemoon.es",
+      "sameAs": ["https://whitemoon.es/"],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Servicios de tatuaje",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Diseño personalizado" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Realismo y color" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Blackwork y fineline" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Coberturas (cover-up)" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Primera consulta y boceto" } }
+        ]
+      }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#servicio",
+      "name": "Tatuajes de diseño personalizado, realismo, blackwork y coberturas",
+      "serviceType": "Estudio de tatuajes",
+      "description": "Bocetos a medida a partir de tu idea, retratos y piezas realistas, línea fina, geométrico y lettering, y coberturas de tatuajes antiguos. Primera consulta y presupuesto sin compromiso, con material esterilizado de un solo uso.",
+      "url": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/",
+      "provider": { "@id": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#negocio" },
+      "areaServed": {
+        "@type": "AdministrativeArea",
+        "name": "Noroeste de Madrid"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#migas",
+      "itemListElement": [{
+        "@type": "ListItem",
+        "position": 1,
+        "name": "Inicio",
+        "item": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/"
+      }]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "¿Cuánto cuesta un tatuaje?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depende del tamaño, de la zona del cuerpo y del estilo: no cuesta lo mismo una línea fina pequeña que una pieza en color. Te damos un presupuesto cerrado en cuanto vemos el diseño, sin compromiso."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Duele hacerse un tatuaje?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Depende de la zona y de cada persona: las partes con más hueso o piel fina se notan más. El artista te acompaña durante toda la sesión, adapta el ritmo y para cuando lo necesites."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿El material es esterilizado y de un solo uso?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Las agujas y las tintas son de un solo uso y se abren delante de ti, y el puesto se prepara con barreras nuevas en cada sesión siguiendo los protocolos de higiene y bioseguridad."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Hacéis coberturas de tatuajes antiguos?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "Sí. Valoramos el tatuaje actual, su tamaño, su color y cómo ha cicatrizado, y a partir de ahí te proponemos un diseño que lo tape o lo integre. En algunos casos hace falta aclararlo antes."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "¿Atendéis a menores?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "No. Es imprescindible ser mayor de edad y presentar el DNI el día de la cita, sin excepciones ni autorización de los padres."
+          }
+        }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<a class="skip" href="#contenido">Saltar al contenido</a>
+
+<div class="wrapper">
+
+  <!--
+    Barra fija. Va FUERA del hero a propósito: position:sticky solo pega
+    dentro de su contenedor, así que dentro del hero dejaría de estarlo al
+    pasar de largo. Como hermana de .wrapper, acompaña toda la página.
+  -->
+  <nav class="nav" aria-label="Navegación principal"
+       data-rv style="--ry:-20px; --rdelay:0s">
+
+    <!-- Logo de la marca: vuelve al inicio de ESTA web. Se usa "#top" y no
+         "/" porque en GitHub Pages la raíz sale del subdirectorio del repo.
+         El emblema lleva el alt, y el wordmark de al lado va aria-hidden
+         para que un lector no diga "WhiteMoon" dos veces. -->
+    <a class="wm" href="#top">
+      <picture>
+        <source srcset="assets/img/whitemoon-logo.webp" type="image/webp">
+        <img src="assets/img/whitemoon-logo.png" width="119" height="124" alt="WhiteMoon">
+      </picture>
+      <span aria-hidden="true">WhiteMoon</span>
+    </a>
+
+    <div class="nav__links">
+      <a href="#servicios">Servicios</a>
+      <a href="#proyectos">Trabajos</a>
+      <button type="button" data-agente>Pide tu boceto</button>
+      <a href="#contacto">Contacto</a>
+    </div>
+  </nav>
+
+  <!-- Un único <main>: el nav queda fuera y el footer también. -->
+  <main id="contenido" tabindex="-1">
+
+  <!-- =================================================== 1. HERO ===== -->
+  <header class="hero" id="top">
+
+    <div class="hero__title">
+      <h1 class="hero-heading" data-rv style="--ry:40px; --rdelay:.15s">arte en tu piel</h1>
+    </div>
+
+    <div class="hero__bar">
+      <p data-rv style="--ry:20px; --rdelay:.35s">
+        estudio de tatuajes: diseño personalizado, realismo, blackwork y
+        coberturas, con material esterilizado de un solo uso
+      </p>
+      <button class="btn btn--primary" type="button" data-agente
+              data-rv style="--ry:20px; --rdelay:.5s">
+        Pide tu boceto
+      </button>
+    </div>
+
+    <!-- [IMG_HERO] -->
+    <div class="hero__img magnet" data-magnet data-rv style="--ry:30px; --rdelay:.6s">
+      <img src="assets/img/hero-tatuaje.jpg" width="1040" height="693" fetchpriority="high"
+           alt="Tatuador con guante negro tatuando el brazo de un cliente">
+    </div>
+  </header>
+
+  <!-- ================================================ 2. MARQUEE ===== -->
+  <section class="marquee" data-marquee aria-label="Galería del estudio de tatuajes">
+    <div class="marquee__row">
+      <!-- [IMG_MARQUEE_1] … [IMG_MARQUEE_11] -->
+      <img src="assets/img/mq-01.jpg" width="840" height="540" loading="lazy" alt="Manos con guantes tatuando el brazo de un cliente">
+      <img src="assets/img/mq-02.jpg" width="840" height="540" loading="lazy" alt="Tatuador trabajando sobre el brazo de un cliente, en blanco y negro">
+      <img src="assets/img/mq-03.jpg" width="840" height="540" loading="lazy" alt="Tatuador con mascarilla tatuando de cerca en el estudio">
+      <img src="assets/img/mq-04.jpg" width="840" height="540" loading="lazy" alt="Mano tatuada sujetando una máquina de tatuar en el estudio">
+      <img src="assets/img/mq-05.jpg" width="840" height="540" loading="lazy" alt="Máquina de tatuar trabajando sobre un tatuaje a color">
+      <img src="assets/img/mq-06.jpg" width="840" height="540" loading="lazy" alt="Guante negro tatuando un antebrazo con un diseño de línea">
+      <img src="assets/img/mq-07.jpg" width="840" height="540" loading="lazy" alt="Manos con guantes negros tatuando un brazo con un diseño japonés">
+      <img src="assets/img/mq-08.jpg" width="840" height="540" loading="lazy" alt="Mujer con un tatuaje floral en el hombro">
+      <img src="assets/img/mq-09.jpg" width="840" height="540" loading="lazy" alt="Espalda con un tatuaje ornamental en tinta negra">
+      <img src="assets/img/mq-10.jpg" width="840" height="540" loading="lazy" alt="Antebrazo tatuado con lettering de estilo tradicional">
+      <img src="assets/img/mq-11.jpg" width="840" height="540" loading="lazy" alt="Mano dibujando a mano un boceto sobre papel">
+    </div>
+    <div class="marquee__row">
+      <!-- [IMG_MARQUEE_12] … [IMG_MARQUEE_21] -->
+      <img src="assets/img/mq-12.jpg" width="840" height="540" loading="lazy" alt="Interior de un estudio de tatuaje con la camilla y láminas en la pared">
+      <img src="assets/img/mq-11.jpg" width="840" height="540" loading="lazy" alt="Mano dibujando a mano un boceto sobre papel">
+      <img src="assets/img/mq-10.jpg" width="840" height="540" loading="lazy" alt="Antebrazo tatuado con lettering de estilo tradicional">
+      <img src="assets/img/mq-09.jpg" width="840" height="540" loading="lazy" alt="Espalda con un tatuaje ornamental en tinta negra">
+      <img src="assets/img/mq-08.jpg" width="840" height="540" loading="lazy" alt="Mujer con un tatuaje floral en el hombro">
+      <img src="assets/img/mq-07.jpg" width="840" height="540" loading="lazy" alt="Manos con guantes negros tatuando un brazo con un diseño japonés">
+      <img src="assets/img/mq-06.jpg" width="840" height="540" loading="lazy" alt="Guante negro tatuando un antebrazo con un diseño de línea">
+      <img src="assets/img/mq-05.jpg" width="840" height="540" loading="lazy" alt="Máquina de tatuar trabajando sobre un tatuaje a color">
+      <img src="assets/img/mq-04.jpg" width="840" height="540" loading="lazy" alt="Mano tatuada sujetando una máquina de tatuar en el estudio">
+      <img src="assets/img/mq-03.jpg" width="840" height="540" loading="lazy" alt="Tatuador con mascarilla tatuando de cerca en el estudio">
+    </div>
+  </section>
+
+  <!-- ========================================== 3. SOBRE NOSOTROS ===== -->
+  <section class="about" id="sobre-nosotros">
+
+    <!-- [IMG_DECO_1] -->
+    <div class="about__deco deco-tl" data-rv style="--rx:-80px; --rdelay:.1s; --rdur:.9s" aria-hidden="true">
+      <img src="assets/img/deco-1.jpg" width="440" height="440" loading="lazy" alt="">
+    </div>
+    <!-- [IMG_DECO_2] -->
+    <div class="about__deco deco-bl" data-rv style="--rx:-80px; --rdelay:.25s" aria-hidden="true">
+      <img src="assets/img/deco-2.jpg" width="440" height="440" loading="lazy" alt="">
+    </div>
+    <!-- [IMG_DECO_3] -->
+    <div class="about__deco deco-tr" data-rv style="--rx:80px; --rdelay:.15s" aria-hidden="true">
+      <img src="assets/img/deco-3.jpg" width="440" height="440" loading="lazy" alt="">
+    </div>
+    <!-- [IMG_DECO_4] -->
+    <div class="about__deco deco-br" data-rv style="--rx:80px; --rdelay:.3s" aria-hidden="true">
+      <img src="assets/img/deco-4.jpg" width="440" height="440" loading="lazy" alt="">
+    </div>
+
+    <h2 class="hero-heading" data-rv style="--ry:40px">Sobre nosotros</h2>
+
+    <p class="about__text" data-chars>En WhiteMoon cada tatuaje empieza por el boceto: escuchamos tu idea, la dibujamos a medida y la tatuamos con material esterilizado de un solo uso. Realismo, blackwork, línea fina y coberturas, a tu ritmo y sin prisa.</p>
+
+    <div class="about__cta">
+      <button class="btn btn--primary" type="button" data-agente>Pide tu boceto</button>
+    </div>
+  </section>
+
+  <!-- =============================================== 4. SERVICIOS ===== -->
+  <section class="services" id="servicios">
+    <h2>Servicios</h2>
+
+    <div class="services__list">
+      <article class="service" data-rv style="--ry:24px; --rdelay:0s">
+        <p class="service__n" aria-hidden="true">01</p>
+        <div class="service__b">
+          <h3>Diseño personalizado</h3>
+          <p>Bocetos a medida a partir de tu idea: partimos de lo que traes en la cabeza y lo dibujamos hasta que encaja contigo.</p>
+        </div>
+      </article>
+
+      <article class="service" data-rv style="--ry:24px; --rdelay:.1s">
+        <p class="service__n" aria-hidden="true">02</p>
+        <div class="service__b">
+          <h3>Realismo y color</h3>
+          <p>Retratos y piezas realistas con profundidad, trabajando luces, sombras y saturación para que la pieza aguante con los años.</p>
+        </div>
+      </article>
+
+      <article class="service" data-rv style="--ry:24px; --rdelay:.2s">
+        <p class="service__n" aria-hidden="true">03</p>
+        <div class="service__b">
+          <h3>Blackwork y fineline</h3>
+          <p>Línea fina, geométrico y lettering: piezas en tinta negra donde el trazo limpio y la composición mandan.</p>
+        </div>
+      </article>
+
+      <article class="service" data-rv style="--ry:24px; --rdelay:.3s">
+        <p class="service__n" aria-hidden="true">04</p>
+        <div class="service__b">
+          <h3>Coberturas (cover-up)</h3>
+          <p>Tapamos o renovamos tatuajes antiguos: valoramos el que tienes y diseñamos encima una pieza nueva que lo integre.</p>
+        </div>
+      </article>
+
+      <article class="service" data-rv style="--ry:24px; --rdelay:.4s">
+        <p class="service__n" aria-hidden="true">05</p>
+        <div class="service__b">
+          <h3>Primera consulta y boceto</h3>
+          <p>Asesoría y presupuesto sin compromiso: hablamos de estilo, zona y tamaño antes de que decidas nada.</p>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- =============================================== 5. PROYECTOS ===== -->
+  <section class="work" id="proyectos">
+    <h2 class="hero-heading" data-rv style="--ry:40px">Nuestro trabajo</h2>
+
+    <div class="cases">
+
+      <!-- Caso 01 -->
+      <div class="case-slot">
+        <article class="case" style="--i:0">
+          <div class="case__top">
+            <p class="case__n" aria-hidden="true">01</p>
+            <div class="case__meta">
+              <span class="case__cat">Portfolio</span>
+              <h3 class="case__name">Retrato en realismo</h3>
+            </div>
+            <button class="btn btn--ghost" type="button" data-agente>Pide tu boceto</button>
+          </div>
+          <div class="case__grid">
+            <div class="case__col">
+              <!-- [IMG_P1_A] -->
+              <img class="case__a" src="assets/img/case1-a.jpg" width="940" height="460" loading="lazy"
+                   alt="Tatuador tatuando un diseño dibujado en el pecho de un cliente">
+              <!-- [IMG_P1_B] -->
+              <img class="case__b" src="assets/img/case1-b.jpg" width="940" height="676" loading="lazy"
+                   alt="Tatuador con mascarilla trabajando de cerca sobre la piel">
+            </div>
+            <div class="case__col">
+              <!-- [IMG_P1_C] -->
+              <img class="case__c" src="assets/img/case1-c.jpg" width="1200" height="980" loading="lazy"
+                   alt="Manos con guantes negros tatuando un brazo con la máquina">
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Caso 02 -->
+      <div class="case-slot">
+        <article class="case" style="--i:1">
+          <div class="case__top">
+            <p class="case__n" aria-hidden="true">02</p>
+            <div class="case__meta">
+              <span class="case__cat">Portfolio</span>
+              <h3 class="case__name">Blackwork geométrico</h3>
+            </div>
+            <button class="btn btn--ghost" type="button" data-agente>Pide tu boceto</button>
+          </div>
+          <div class="case__grid">
+            <div class="case__col">
+              <!-- [IMG_P2_A] -->
+              <img class="case__a" src="assets/img/case2-a.jpg" width="940" height="460" loading="lazy"
+                   alt="Brazo extendido con una manga tatuada en tinta negra">
+              <!-- [IMG_P2_B] -->
+              <img class="case__b" src="assets/img/case2-b.jpg" width="940" height="676" loading="lazy"
+                   alt="Nuca con un tatuaje ornamental de puntillismo en negro">
+            </div>
+            <div class="case__col">
+              <!-- [IMG_P2_C] -->
+              <img class="case__c" src="assets/img/case2-c.jpg" width="1200" height="980" loading="lazy"
+                   alt="Espalda con un gran tatuaje blackwork geométrico, en blanco y negro">
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <!-- Caso 03 — el único con formato Antes / Después: en una cobertura sí
+           hay una pieza previa que enseñar. Los pies de foto describen lo que
+           se ve en cada imagen de stock, sin dar a entender que sean el mismo
+           brazo antes y después. -->
+      <div class="case-slot">
+        <article class="case" style="--i:2">
+          <div class="case__top">
+            <p class="case__n" aria-hidden="true">03</p>
+            <div class="case__meta">
+              <span class="case__cat">Antes / Después</span>
+              <h3 class="case__name">Cover-up de un tatuaje antiguo</h3>
+            </div>
+            <button class="btn btn--ghost" type="button" data-agente>Pide tu boceto</button>
+          </div>
+          <div class="case__grid">
+            <div class="case__col">
+              <!-- [IMG_P3_A] -->
+              <img class="case__a" src="assets/img/case3-a.jpg" width="940" height="460" loading="lazy"
+                   alt="Antes: antebrazo con un tatuaje antiguo de lettering">
+              <!-- [IMG_P3_B] -->
+              <img class="case__b" src="assets/img/case3-b.jpg" width="940" height="676" loading="lazy"
+                   alt="Sesión de cobertura: tatuando encima de un brazo ya tatuado">
+            </div>
+            <div class="case__col">
+              <!-- [IMG_P3_C] -->
+              <img class="case__c" src="assets/img/case3-c.jpg" width="1200" height="980" loading="lazy"
+                   alt="Después: brazo con una pieza floral nueva en tinta negra">
+            </div>
+          </div>
+        </article>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- ====================================================== FAQ ===== -->
+  <!--
+    Fuera del orden de secciones del spec, pero necesario: el FAQPage de
+    schema.org exige que las respuestas estén visibles en el DOM.
+  -->
+  <section class="faq" id="faq">
+    <div class="faq__in">
+      <h2 class="hero-heading" data-rv style="--ry:40px">Preguntas</h2>
+
+      <details>
+        <summary>¿Cuánto cuesta un tatuaje?</summary>
+        <p class="faq__a">Depende del tamaño, de la zona del cuerpo y del estilo: no cuesta lo mismo una línea fina pequeña que una pieza en color. Te damos un presupuesto cerrado en cuanto vemos el diseño, sin compromiso.</p>
+      </details>
+
+      <details>
+        <summary>¿Duele hacerse un tatuaje?</summary>
+        <p class="faq__a">Depende de la zona y de cada persona: las partes con más hueso o piel fina se notan más. El artista te acompaña durante toda la sesión, adapta el ritmo y para cuando lo necesites.</p>
+      </details>
+
+      <details>
+        <summary>¿El material es esterilizado y de un solo uso?</summary>
+        <p class="faq__a">Sí. Las agujas y las tintas son de un solo uso y se abren delante de ti, y el puesto se prepara con barreras nuevas en cada sesión siguiendo los protocolos de higiene y bioseguridad.</p>
+      </details>
+
+      <details>
+        <summary>¿Hacéis coberturas de tatuajes antiguos?</summary>
+        <p class="faq__a">Sí. Valoramos el tatuaje actual, su tamaño, su color y cómo ha cicatrizado, y a partir de ahí te proponemos un diseño que lo tape o lo integre. En algunos casos hace falta aclararlo antes.</p>
+      </details>
+
+      <details>
+        <summary>¿Atendéis a menores?</summary>
+        <p class="faq__a">No. Es imprescindible ser mayor de edad y presentar el DNI el día de la cita, sin excepciones ni autorización de los padres.</p>
+      </details>
+    </div>
+  </section>
+
+  <!-- ================================================= CONTACTO ===== -->
+  <section class="contact" id="contacto">
+    <div class="contact__in">
+
+      <div class="contact__col">
+        <h2 class="hero-heading" data-rv style="--ry:30px">Contacto</h2>
+        <p data-rv style="--ry:20px; --rdelay:.1s">
+          Cuéntale al agente qué te quieres tatuar y en qué zona del cuerpo.
+          Te respondemos con una propuesta y un precio, sin compromiso.
+        </p>
+
+        <div class="contact__cta" data-rv style="--ry:20px; --rdelay:.15s">
+          <button class="btn btn--primary" type="button" data-agente>Pide tu boceto</button>
+        </div>
+
+        <!-- Datos de contacto reales de WhiteMoon: los enlaces funcionan. -->
+        <div class="contact__card" data-rv style="--ry:20px; --rdelay:.2s">
+          <p class="contact__tag">Datos de contacto</p>
+
+          <ul class="contact__data">
+            <li>
+              <span class="contact__ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M6.3 3h3l1.5 4-2 1.4a12 12 0 0 0 5.8 5.8l1.4-2 4 1.5v3a2 2 0 0 1-2.2 2A17 17 0 0 1 4.3 5.2 2 2 0 0 1 6.3 3z"/>
+                </svg>
+              </span>
+              <span class="contact__val">
+                <a href="tel:+34643199580">643 199 580</a>
+                <span>Teléfono y WhatsApp</span>
+              </span>
+            </li>
+
+            <li>
+              <span class="contact__ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/>
+                </svg>
+              </span>
+              <span class="contact__val">
+                <a href="mailto:comercial@whitemoon.es">comercial@whitemoon.es</a>
+                <span>Email</span>
+              </span>
+            </li>
+
+            <li>
+              <span class="contact__ic" aria-hidden="true">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M12 21s7-6.1 7-11a7 7 0 1 0-14 0c0 4.9 7 11 7 11z"/><circle cx="12" cy="10" r="2.6"/>
+                </svg>
+              </span>
+              <span class="contact__val">
+                <a href="https://maps.google.com/maps?q=WhiteMoon+Agencia+IA+Majadahonda" target="_blank" rel="noopener">Majadahonda, Madrid</a>
+                <span>Ubicación</span>
+              </span>
+            </li>
+          </ul>
+
+          <a class="btn btn--ghost contact__wa" href="https://wa.me/34643199580"
+             target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M21 11.5a8.4 8.4 0 0 1-12.5 7.3L3 21l2.2-5.4A8.4 8.4 0 1 1 21 11.5z"/>
+              <path d="M8.6 9.2c0 3.4 2.8 6.2 6.2 6.2l1.1-1.6-2-1-1 .9a5 5 0 0 1-2.6-2.6l.9-1-1-2-1.6 1.1z" fill="currentColor" stroke="none"/>
+            </svg>
+            Escríbenos por WhatsApp
+          </a>
+        </div>
+      </div>
+
+      <div class="contact__map" data-rv style="--ry:24px; --rdelay:.25s">
+        <iframe
+          src="https://maps.google.com/maps?q=40.4737104,-3.8715623&amp;z=16&amp;output=embed"
+          title="Ubicación en el mapa"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          allowfullscreen></iframe>
+      </div>
+    </div>
+
+    <div class="contact__nota">
+      <div class="slot" data-rv style="--ry:20px; --rdelay:.1s">
+        <b>Hueco reservado</b>
+        <p>
+          Esta es una demo de WhiteMoon para un estudio de tatuajes. El
+          teléfono, el email y el mapa son reales, así que los enlaces
+          funcionan; en la web de un cliente irían los suyos. Las fotos son
+          imágenes de stock, no trabajos de un estudio concreto, y los casos
+          de "Nuestro trabajo" son ejemplos ilustrativos: no se inventa nada.
+          Aquí es donde irían el portfolio y las reseñas reales del estudio.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  </main>
+
+  <footer class="footer">
+    <div class="footer__in">
+      <p>WhiteMoon · Demo</p>
+      <p>Agencia IA · Majadahonda, Madrid</p>
+    </div>
+  </footer>
+
+</div>
+
+<script src="assets/js/site.js" defer></script>
+<script src="assets/js/lead.js" defer></script>
+<script src="assets/js/agente.js" defer></script>
+</body>
+</html>

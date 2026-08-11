@@ -1,0 +1,59 @@
+# WhiteMoon
+
+> Estudio de tatuajes en el noroeste de Madrid: diseño personalizado, realismo
+> y color, blackwork y línea fina, coberturas de tatuajes antiguos y primera
+> consulta con boceto. Es una DEMO de WhiteMoon Agencia IA con marca de
+> ejemplo: no es un estudio real y no contiene reseñas, años de experiencia,
+> artistas ni clientes.
+
+## Páginas
+
+- [WhiteMoon — Estudio de tatuajes](https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/): landing única con servicios, galería del estudio, trabajos y preguntas frecuentes.
+- [Servicios](https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#servicios): los cinco servicios que presta el estudio.
+- [Nuestro trabajo](https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#proyectos): piezas de portfolio ilustrativas y un cover-up en formato antes/después.
+- [Preguntas frecuentes](https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#faq): precio, dolor, material esterilizado, coberturas y edad mínima.
+- [Contacto](https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/#contacto): acceso al asistente del estudio.
+
+## Servicios
+
+- Diseño personalizado: bocetos a medida a partir de tu idea, dibujados hasta que encajan contigo.
+- Realismo y color: retratos y piezas realistas con profundidad, trabajando luces, sombras y saturación.
+- Blackwork y fineline: línea fina, geométrico y lettering en tinta negra.
+- Coberturas (cover-up): tapamos o renovamos tatuajes antiguos con un diseño nuevo que los integre.
+- Primera consulta y boceto: asesoría y presupuesto sin compromiso sobre estilo, zona y tamaño.
+
+## Zona de cobertura
+
+Majadahonda, Las Rozas de Madrid, Pozuelo de Alarcón, Boadilla del Monte
+y Torrelodones.
+
+## Precio
+
+No hay tarifa pública: el importe depende del tamaño, de la zona del cuerpo y
+del estilo. El presupuesto es cerrado y sin compromiso, y se comunica en cuanto
+está definido el diseño.
+
+## Higiene y edad mínima
+
+Las agujas y las tintas son de un solo uso. Es imprescindible ser mayor de edad
+y presentar el DNI el día de la cita: no se atiende a menores.
+
+## Agente IA
+
+La web incluye a Neo, el asistente del estudio, que pregunta por el estilo, la
+zona del cuerpo, el tamaño aproximado, el nombre y el teléfono. El lead se
+registra y se avisa al equipo al instante.
+
+## Aviso sobre esta demo
+
+- [WhiteMoon Agencia IA](https://whitemoon.es/) es la agencia que ha construido esta demo.
+- La web está a nombre de WhiteMoon, que es la agencia que la ha construido:
+  para un cliente real se sustituiría por su marca.
+- El teléfono (643 199 580), el email (comercial@whitemoon.es) y el mapa de la
+  sección de contacto son los reales de WhiteMoon, la agencia que ha hecho la
+  demo, no los de un estudio de tatuajes. Para un cliente real irían los suyos.
+- Las fotografías son imágenes de stock de Unsplash sobre tatuajes en general,
+  no trabajos realizados por un estudio concreto.
+- Los casos de "Nuestro trabajo" son ejemplos ilustrativos, no clientes reales.
+  Las dos primeras piezas están etiquetadas como portfolio; en el cover-up, las
+  imágenes de "antes" y "después" no son la misma persona ni el mismo tatuaje.
