@@ -291,14 +291,30 @@ ul { list-style: none; }
   position: relative;
   z-index: 5;
 }
-.hero__title h1 {
+/*
+ * Titular del hero. El tamaño va SOLO aquí: la clase .hero-heading la
+ * comparten los <h2> de las demás secciones, que mantienen el suyo.
+ *
+ * "ARTE EN TU PIEL" mide 7,185 veces su font-size en Kanit 900 con este
+ * letter-spacing (medido en el navegador, no estimado). El caso más
+ * apretado es un viewport de 320 px, donde quedan 272 px útiles: ahí caben
+ * 37,9 px, o sea 11,83vw. Con 11.5vw entra en una sola línea desde 278 px
+ * hacia arriba, con un 3 % de margen, y sin recortarse en ningún tamaño.
+ *
+ * Se conserva white-space:nowrap a propósito: si el texto pudiera envolver,
+ * la fuente de sistema —más ancha que Kanit— lo partiría en dos líneas
+ * durante el primer pintado y al llegar Kanit volvería a una, lo que sería
+ * justo el salto de layout que este hero no debe tener. Con nowrap la caja
+ * mide lo mismo con una fuente o con la otra y el CLS se queda en 0.
+ */
+.hero__title .hero-heading {
   font-weight: 900;
   text-transform: uppercase;
   letter-spacing: -.035em;
   line-height: 1;
   white-space: nowrap;
   width: 100%;
-  font-size: 14vw;
+  font-size: clamp(2rem, 11.5vw, 200px);
   margin-top: 1.5rem;
 }
 
@@ -840,7 +856,9 @@ ul { list-style: none; }
 
 @media (min-width: 640px) {
   .wm img { height: 44px; }
-  .hero__title h1 { font-size: 15vw; margin-top: 1rem; }
+  /* El tamaño lo lleva el clamp de .hero__title .hero-heading; aquí solo
+     queda el ajuste vertical del titular. */
+  .hero__title h1 { margin-top: 1rem; }
 
   .hero__img {
     top: auto;
@@ -899,7 +917,7 @@ ul { list-style: none; }
   .nav a, .nav button { font-size: 1.125rem; }
 
   .hero__title { padding-inline: var(--px-10); }
-  .hero__title h1 { font-size: 16vw; margin-top: -1.25rem; }
+  .hero__title h1 { margin-top: -1.25rem; }
 
   .hero__img { width: 440px; }
 
@@ -970,7 +988,6 @@ ul { list-style: none; }
   .nav a, .nav button { font-size: 1.4rem; }
   .wm img { height: 52px; }
   .wm span { font-size: 1.3rem; }
-  .hero__title h1 { font-size: 17.5vw; }
   .hero__img { width: 520px; }
   .hero__bar p { max-width: 440px; }
 }
