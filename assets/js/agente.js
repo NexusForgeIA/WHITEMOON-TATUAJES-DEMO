@@ -2,14 +2,13 @@
  * agente.js — Neo, asistente del estudio de tatuajes de WhiteMoon.
  *
  * Modelo "demo + pivote". Quien visita la demo no es cliente de tatuajes: es
- * un dueño de negocio viendo el producto. Así que Neo:
- *   FASE 1 — demuestra: resuelve dudas del estudio con botones y respuestas
- *            fijas (sin cifras de precio). No pide ningún dato.
- *   FASE 2 — pivota: tras 2 respuestas, o al pulsar "¿Cómo funciona esto?" /
- *            "Me interesa para mi negocio", ofrece un agente así para SU
- *            negocio y pide tipo de negocio -> nombre -> teléfono.
- * El lead viaja como PROSPECTO DE AGENCIA, no como reserva de tatuaje: el
- * tipo de negocio va en 'mensaje' y tatuajes-notify lo lee de ahí.
+ * un dueño de negocio viendo el producto. Flujo corto, solo botones:
+ *   1. Elige uno de 3 servicios y Neo responde en una frase (sin cifras).
+ *   2. Pivota: "esto te lo he respondido yo solo" -> ¿te interesa uno así?
+ *   3. Nombre -> teléfono -> cierre y envío.
+ * El lead viaja como PROSPECTO DE AGENCIA, no como reserva de tatuaje. El
+ * tipo de negocio ya no se pregunta: va fijo como "Estudio de tatuajes" en
+ * 'mensaje', que es de donde lo lee tatuajes-notify.
  *
  * El envío del lead se delega en lead.js, que es el único sitio con la
  * configuración de Supabase. Aquí no hay claves.
@@ -28,33 +27,20 @@
   var GRAD = "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)";
 
   /* ------------------------------- Guion ------------------------------- */
-  /* Respuestas fijas de la fase 1. Sin cifras: el precio va siempre por
-     factores y se cierra al ver el diseño. */
-  var DUDAS = [
-    { id: "estilos", label: "Estilos",
-      texto: "Trabajamos realismo, blackwork, línea fina y coberturas de tatuajes antiguos. Cada diseño se dibuja a medida a partir de tu idea." },
-    { id: "higiene", label: "Cuidados e higiene",
-      texto: "Material esterilizado y de un solo uso, abierto delante de ti. Al terminar te explicamos los cuidados para que cicatrice bien." },
-    { id: "proceso", label: "Cómo es el proceso",
-      texto: "Nos cuentas la idea, la dibujamos a medida y, cuando encaja contigo, la tatuamos a tu ritmo. La primera consulta y el presupuesto son sin compromiso." },
-    { id: "precios", label: "Precios",
-      texto: "Depende del tamaño, la zona y el estilo: no cuesta lo mismo una línea fina pequeña que una pieza en color. El presupuesto se cierra al ver el diseño, sin compromiso." }
+  /* Respuestas fijas, sin cifras. */
+  var SERVICIOS = [
+    { id: "realismo", label: "Realismo y color",
+      texto: "Realismo y color: retratos y piezas con profundidad, trabajando luces y sombras para que aguanten con los años." },
+    { id: "blackwork", label: "Blackwork y línea fina",
+      texto: "Blackwork y línea fina: geométrico, lettering y trazo limpio en tinta negra, con la composición cuidada." },
+    { id: "coverup", label: "Cover-up (cubrir un tatuaje)",
+      texto: "Cover-up: valoramos tu tatuaje actual y diseñamos encima una pieza nueva que lo tape o lo integre." }
   ];
 
-  var PIVOTE = "Por cierto: todo esto te lo estoy respondiendo yo solo, un agente de " +
-    "WhiteMoon, 24/7. En tu negocio haría lo mismo: atender, resolver dudas y " +
-    "captar clientes mientras tú trabajas. ¿Quieres uno así?";
+  var PIVOTE = "Y esto te lo he respondido yo solo, un agente de WhiteMoon. En tu " +
+    "negocio haría lo mismo, 24/7. ¿Te interesa uno así? Déjame tus datos y te llamamos.";
 
-  /* Respuestas de fase 1 antes de pivotar solo. */
-  var MAX_DUDAS = 2;
-
-  /* Si en vez del tipo de negocio escriben que quieren tatuarse o reservar,
-     se aclara que es una demo. Estrecho a propósito: "estudio de tatuajes"
-     es un negocio válido y NO debe caer aquí. */
-  var RESERVA = /reserv|pedir cita|tatuarme|hacerme un tatu|mi boceto|quiero un tatu/i;
-
-  var lead = { negocio: "", nombre: "", telefono: "" };
-  var vistas = [];
+  var lead = { nombre: "", telefono: "" };
   var step = "";
   var els = {};
   var abierto = false;
@@ -308,34 +294,21 @@
 
   /* --------------------------- Máquina de estados --------------------------- */
   function start() {
-    botMsg("Hola, soy Neo, el asistente del estudio. Puedo resolverte dudas.\n¿Qué quieres saber?", ofrecerDudas);
+    botMsg("Hola, soy Neo, el asistente del estudio. ¿Qué te gustaría ver?", function () {
+      step = "servicio";
+      options(SERVICIOS.map(function (s) { return { label: s.label, value: s.id }; }), pickServicio);
+    });
   }
 
-  /* FASE 1. Dudas aún no vistas + "¿Cómo funciona esto?" al principio,
-     o + "Me interesa para mi negocio" tras la primera respuesta. */
-  function ofrecerDudas() {
-    step = "dudas";
-    var opts = DUDAS.filter(function (d) { return vistas.indexOf(d.id) < 0; })
-      .map(function (d) { return { label: d.label, value: d.id }; });
-    opts.push(vistas.length
-      ? { label: "Me interesa para mi negocio", value: "pivote" }
-      : { label: "¿Cómo funciona esto?", value: "pivote" });
-    options(opts, pickDuda);
-  }
-
-  function pickDuda(id) {
-    if (id === "pivote") { pivota(); return; }
-    var d = DUDAS.filter(function (x) { return x.id === id; })[0];
-    vistas.push(d.id);
-    botMsg(d.texto, vistas.length >= MAX_DUDAS ? pivota : ofrecerDudas);
-  }
-
-  /* FASE 2. */
-  function pivota() {
-    botMsg(PIVOTE, function () {
-      botMsg("¿Qué tipo de negocio tienes?", function () {
-        step = "negocio";
-        showInput("Ej.: peluquería, clínica, taller…", "text", "off");
+  /* Un servicio, su respuesta, y pivote directo a pedir los datos. */
+  function pickServicio(id) {
+    var s = SERVICIOS.filter(function (x) { return x.id === id; })[0];
+    botMsg(s.texto, function () {
+      botMsg(PIVOTE, function () {
+        botMsg("¿Cómo te llamas?", function () {
+          step = "nombre";
+          showInput("Tu nombre", "text", "name");
+        });
       });
     });
   }
@@ -345,32 +318,14 @@
     var val = els.input.value.trim();
     if (!val) return;
 
-    if (step === "negocio") {
-      userMsg(val);
-      hideInput();
-      if (RESERVA.test(val)) {
-        botMsg("Esto es una demo de WhiteMoon: aquí no se reservan tatuajes reales. " +
-          "Si tienes un negocio y quieres un agente así, dime de qué tipo y te llamamos, sin compromiso.", function () {
-          showInput("Ej.: peluquería, clínica, taller…", "text", "off");
-        });
-        return;
-      }
-      lead.negocio = val;
-      botMsg("¿Tu nombre?", function () {
-        step = "nombre";
-        showInput("Escribe tu nombre", "text", "name");
-      });
-      return;
-    }
-
     if (step === "nombre") {
       if (val.length < 2) { showErr("Dime tu nombre, por favor."); return; }
       lead.nombre = val;
       userMsg(val);
       hideInput();
-      botMsg("¿Un teléfono para llamarte, sin compromiso?", function () {
+      botMsg("¿Tu teléfono?", function () {
         step = "telefono";
-        showInput("6XX XXX XXX", "tel", "tel");
+        showInput("Tu teléfono", "tel", "tel");
       });
       return;
     }
@@ -400,8 +355,7 @@
     els.input.placeholder = "Conversación finalizada";
     els.send.disabled = true;
 
-    botMsg("Perfecto, " + lead.nombre + ". Te llamamos al " + lead.telefono +
-      " para enseñarte cómo sería en tu negocio.");
+    botMsg("Perfecto, " + lead.nombre + ". Te llamamos al " + lead.telefono + ".");
   }
 
   /*
@@ -419,7 +373,7 @@
       nombre: lead.nombre,
       telefono: lead.telefono,
       servicio: "Quiere agente IA para su negocio",   /* -> columna 'interes' */
-      mensaje: "Dueño de negocio llegado desde la demo de tatuajes. Tipo de negocio: " + lead.negocio
+      mensaje: "Dueño de negocio llegado desde la demo de tatuajes. Tipo de negocio: Estudio de tatuajes"
     });
   }
 
