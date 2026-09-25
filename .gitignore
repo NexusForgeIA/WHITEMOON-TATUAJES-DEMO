@@ -1,0 +1,2 @@
+# Caché local del Supabase CLI (se genera al desplegar la Edge Function)
+supabase/.temp/

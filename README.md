@@ -116,25 +116,47 @@ muestra en su estado final.
 
 ## Asistente IA "Neo"
 
-Flujo guiado, máximo 3 frases por respuesta y una pregunta cada vez:
+Modelo **demo + pivote**. Quien abre el asistente no es cliente de tatuajes: es
+un dueño de negocio viendo lo que hace un agente de WhiteMoon. Por eso Neo no
+pide datos de reserva: enseña cómo responde y pivota a captar al visitante como
+**prospecto de agencia**.
+
+Flujo corto, solo botones hasta llegar a los datos:
 
 ```
-estilo → zona del cuerpo → tamaño → nombre → teléfono → cierre
+servicio → respuesta breve → pivote → nombre → teléfono → cierre
 ```
 
-Solo el nombre y el teléfono son obligatorios. El **estilo** elegido es lo que
-viaja como `servicio` y acaba en la columna `interes` de `leads_web`.
+1. Saludo *"Hola, soy Neo, el asistente del estudio. ¿Qué te gustaría ver?"* con
+   3 botones: **Realismo y color**, **Blackwork y línea fina** y **Cover-up
+   (cubrir un tatuaje)**.
+2. Al pulsar uno, Neo responde con una frase fija sobre ese servicio. **Sin
+   cifras**: ningún precio ni dato del estudio inventado.
+3. A continuación viene el pivote: *"Y esto te lo he respondido yo solo, un
+   agente de WhiteMoon. En tu negocio haría lo mismo, 24/7. ¿Te interesa uno
+   así? Déjame tus datos y te llamamos."*
+4. *"¿Cómo te llamas?"* → *"¿Tu teléfono?"* → cierre *"Perfecto, {nombre}. Te
+   llamamos al {telefono}."* y envío del lead.
 
-### Cierre: tarjeta de datos verificados
+Nombre (mínimo 2 caracteres) y teléfono (español, 9 dígitos, admite `+34` y
+`0034`) se validan antes de avanzar. Al cerrar, el input se queda a la vista
+pero **deshabilitado**, con el placeholder *"Conversación finalizada"*.
 
-Al capturar nombre y teléfono se pinta una tarjeta con un check en círculo
-(color de acento, `aria-hidden`), el titular **Datos recibidos**, el resumen de
-lo registrado y el mensaje *"Gracias, {nombre}. Hemos registrado tu consulta de
-{estilo} en {zona}. Te contactamos en breve."*
+Los textos viven en las constantes `SERVICIOS` y `PIVOTE` de
+`assets/js/agente.js`.
 
-La tarjeta va con `role="status"` y `aria-live="polite"`. El input se queda a la
-vista pero **deshabilitado**, con el placeholder *"Conversación finalizada"*.
-**No hay CTA de "llámanos"**: en un estudio de tatuajes no hay urgencias.
+### Qué lleva el lead
+
+| Campo `leads_web` | Valor |
+|---|---|
+| `origen` | `demo-tatuajes` |
+| `sector` | `tatuajes` (enruta el aviso) |
+| `interes` | `Quiere agente IA para su negocio` |
+| `mensaje` | `Dueño de negocio llegado desde la demo de tatuajes. Tipo de negocio: Estudio de tatuajes` |
+
+El tipo de negocio **no se pregunta**: va implícito como *Estudio de tatuajes*.
+El prefijo `Tipo de negocio: ` es el que lee `tatuajes-notify`; si se cambia en
+`agente.js`, hay que cambiarlo también en la función.
 
 ### Envío del lead
 
@@ -155,14 +177,13 @@ vista pero **deshabilitado**, con el placeholder *"Conversación finalizada"*.
 Calcada de `mudanzas-notify`. Envía por **Telegram Bot API** leyendo los
 secrets `TELEGRAM_BOT_TOKEN` y `TELEGRAM_CHAT_ID`, con `verify_jwt: false` y
 guard de lead incompleto (sin nombre o sin teléfono → `400`, sin aviso).
-Formato del mensaje:
+El tipo de negocio lo extrae de `mensaje`. Formato del aviso:
 
 ```
-🔔 Nuevo lead (demo-tatuajes) · tatuajes
+🔔 PROSPECTO DE AGENCIA · vino de la demo de tatuajes (demo-tatuajes)
 Nombre: …
 Teléfono: …
-Servicio: …
-Zona: …
+Tipo de negocio: Estudio de tatuajes
 ```
 
 Despliegue:
@@ -183,7 +204,7 @@ secreto viven como *secrets* de la Edge Function, nunca en el JS.
 
 ## SEO / GEO
 
-- `title` 31 c y `meta description` 148 c.
+- `title` 31 c y `meta description` 142 c.
 - Open Graph y Twitter sincronizados; `og:image` en **JPG** 1200×630.
 - JSON-LD en un único `@graph`: `TattooParlor` (subtipo válido de
   `LocalBusiness`), `Service`, `BreadcrumbList` y `FAQPage`. Sin duplicados.
@@ -209,8 +230,9 @@ secreto viven como *secrets* de la Edge Function, nunca en el JS.
    `wa.me/` y las coordenadas del `<iframe>` del mapa por los del estudio.
 4. **Dominio** — sustituir `https://nexusforgeia.github.io/WHITEMOON-TATUAJES-DEMO/`
    en canonical, og:url, JSON-LD, `sitemap.xml`, `robots.txt` y `llms.txt`.
-5. **Zonas y estilos** — `areaServed` del JSON-LD, `llms.txt` y las constantes
-   `ESTILOS`, `ZONAS` y `TAMANOS` de `assets/js/agente.js`.
+5. **Zonas y servicios** — `areaServed` del JSON-LD, `llms.txt` y las
+   constantes `SERVICIOS` y `PIVOTE` de `assets/js/agente.js` (y el tipo de
+   negocio fijo de `mensaje` en `submitLead`).
 6. **Afirmaciones de servicio** — repasar el copy (material de un solo uso,
    coberturas, edad mínima) y confirmar que el estudio real lo cumple antes de
    publicar.
