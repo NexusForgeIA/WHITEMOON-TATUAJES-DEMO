@@ -160,9 +160,9 @@
     fab.type = "button";
     /* El nombre accesible empieza por el texto visible: si no, salta
        label-content-name-mismatch (WCAG 2.5.3). */
-    fab.setAttribute("aria-label", "Pide tu boceto: abre el asistente de " + EMPRESA);
+    fab.setAttribute("aria-label", "Habla con el agente IA de " + EMPRESA);
     fab.setAttribute("aria-expanded", "false");
-    fab.innerHTML = IC_SPARK + "<span>Pide tu boceto</span>";
+    fab.innerHTML = IC_SPARK + "<span>Habla con el agente</span>";
 
     var panel = document.createElement("div");
     panel.className = "nt-panel";
@@ -207,7 +207,7 @@
   }
 
   /*
-   * El hero ya tiene su botón "Pide tu boceto" abajo a la derecha, justo
+   * El hero ya tiene su botón "Habla con el agente" abajo a la derecha, justo
    * donde va el FAB. Mientras el hero esté en pantalla el FAB se oculta, y
    * aparece al pasar de largo. Sin hero (o sin IntersectionObserver) se
    * muestra siempre.
