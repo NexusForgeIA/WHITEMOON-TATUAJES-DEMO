@@ -1,12 +1,15 @@
 /*
  * agente.js — Neo, asistente del estudio de tatuajes de WhiteMoon.
  *
- * Flujo guiado: estilo -> zona del cuerpo -> tamaño -> nombre -> teléfono ->
- * cierre. Máximo 3 frases por respuesta, una pregunta cada vez, y ningún dato
- * bloquea el avance: todo salvo nombre y teléfono se puede saltar.
- *
- * El estilo elegido es lo que viaja como "servicio" y acaba en la columna
- * 'interes' de leads_web.
+ * Modelo "demo + pivote". Quien visita la demo no es cliente de tatuajes: es
+ * un dueño de negocio viendo el producto. Así que Neo:
+ *   FASE 1 — demuestra: resuelve dudas del estudio con botones y respuestas
+ *            fijas (sin cifras de precio). No pide ningún dato.
+ *   FASE 2 — pivota: tras 2 respuestas, o al pulsar "¿Cómo funciona esto?" /
+ *            "Me interesa para mi negocio", ofrece un agente así para SU
+ *            negocio y pide tipo de negocio -> nombre -> teléfono.
+ * El lead viaja como PROSPECTO DE AGENCIA, no como reserva de tatuaje: el
+ * tipo de negocio va en 'mensaje' y tatuajes-notify lo lee de ahí.
  *
  * El envío del lead se delega en lead.js, que es el único sitio con la
  * configuración de Supabase. Aquí no hay claves.
@@ -25,27 +28,33 @@
   var GRAD = "linear-gradient(123deg,#18011F 7%,#B600A8 37%,#7621B0 72%,#BE4C00 100%)";
 
   /* ------------------------------- Guion ------------------------------- */
-  var ESTILOS = [
-    { id: "diseno",    label: "Diseño personalizado" },
-    { id: "realismo",  label: "Realismo y color" },
-    { id: "blackwork", label: "Blackwork o fineline" },
-    { id: "coverup",   label: "Cobertura (cover-up)" },
-    { id: "duda",      label: "Aún no lo tengo claro" }
+  /* Respuestas fijas de la fase 1. Sin cifras: el precio va siempre por
+     factores y se cierra al ver el diseño. */
+  var DUDAS = [
+    { id: "estilos", label: "Estilos",
+      texto: "Trabajamos realismo, blackwork, línea fina y coberturas de tatuajes antiguos. Cada diseño se dibuja a medida a partir de tu idea." },
+    { id: "higiene", label: "Cuidados e higiene",
+      texto: "Material esterilizado y de un solo uso, abierto delante de ti. Al terminar te explicamos los cuidados para que cicatrice bien." },
+    { id: "proceso", label: "Cómo es el proceso",
+      texto: "Nos cuentas la idea, la dibujamos a medida y, cuando encaja contigo, la tatuamos a tu ritmo. La primera consulta y el presupuesto son sin compromiso." },
+    { id: "precios", label: "Precios",
+      texto: "Depende del tamaño, la zona y el estilo: no cuesta lo mismo una línea fina pequeña que una pieza en color. El presupuesto se cierra al ver el diseño, sin compromiso." }
   ];
 
-  var ZONAS = [
-    "Brazo o antebrazo", "Pierna", "Espalda",
-    "Pecho o costado", "Mano, cuello o pie", "Otra zona"
-  ];
+  var PIVOTE = "Por cierto: todo esto te lo estoy respondiendo yo solo, un agente de " +
+    "WhiteMoon, 24/7. En tu negocio haría lo mismo: atender, resolver dudas y " +
+    "captar clientes mientras tú trabajas. ¿Quieres uno así?";
 
-  var TAMANOS = [
-    "Pequeño (menos de 10 cm)",
-    "Mediano (10-20 cm)",
-    "Grande (más de 20 cm)",
-    "Manga o pieza grande"
-  ];
+  /* Respuestas de fase 1 antes de pivotar solo. */
+  var MAX_DUDAS = 2;
 
-  var lead = { estilo: "", zona: "", tamano: "", nombre: "", telefono: "" };
+  /* Si en vez del tipo de negocio escriben que quieren tatuarse o reservar,
+     se aclara que es una demo. Estrecho a propósito: "estudio de tatuajes"
+     es un negocio válido y NO debe caer aquí. */
+  var RESERVA = /reserv|pedir cita|tatuarme|hacerme un tatu|mi boceto|quiero un tatu/i;
+
+  var lead = { negocio: "", nombre: "", telefono: "" };
+  var vistas = [];
   var step = "";
   var els = {};
   var abierto = false;
@@ -109,18 +118,6 @@
     ".nt-chip:active{transform:scale(.97)}" +
     ".nt-chip.skip{opacity:.6}" +
 
-    /* --- Tarjeta de cierre: datos verificados --- */
-    ".nt-done{align-self:stretch;display:flex;gap:11px;padding:14px;border-radius:18px;" +
-      "border:1px solid rgba(215,226,234,.24);background:rgba(215,226,234,.05)}" +
-    ".nt-done__ic{width:34px;height:34px;flex:none;border-radius:50%;display:grid;place-items:center;" +
-      "background:" + GRAD + ";color:#fff}" +
-    ".nt-done__ic svg{width:18px;height:18px}" +
-    ".nt-done__b{min-width:0}" +
-    ".nt-done__t{display:block;font-size:13.5px;font-weight:600;text-transform:uppercase;letter-spacing:.06em}" +
-    ".nt-done__l{display:grid;gap:3px;margin:9px 0 0;padding:0;list-style:none;font-size:12.5px;font-weight:300;line-height:1.5}" +
-    ".nt-done__l span{opacity:.62;text-transform:uppercase;letter-spacing:.1em;font-size:10px}" +
-    ".nt-done__p{margin-top:10px;font-size:12.5px;font-weight:300;line-height:1.55;opacity:.78}" +
-
     ".nt-foot{flex:none;border-top:1px solid " + LINE + ";padding:12px;background:" + BG + "}" +
     ".nt-form{display:flex;gap:9px}" +
     ".nt-input{flex:1;min-width:0;background:rgba(215,226,234,.07);border:1px solid rgba(215,226,234,.3);" +
@@ -151,7 +148,6 @@
   var IC_SPARK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 3 1.9 5.6L19.5 10l-5.6 1.9L12 17.5l-1.9-5.6L4.5 10l5.6-1.4L12 3z"/><path d="M18.5 15.5 19.3 18l2.5.8-2.5.8-.8 2.5-.8-2.5-2.5-.8 2.5-.8.8-2.5z"/></svg>';
   var IC_CLOSE = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M18 6 6 18M6 6l12 12"/></svg>';
   var IC_SEND  = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 2 11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>';
-  var IC_CHECK = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m5 12.5 4.5 4.5L19 7.5"/></svg>';
 
   /* ------------------------------- DOM ------------------------------- */
   function build() {
@@ -164,9 +160,9 @@
     fab.type = "button";
     /* El nombre accesible empieza por el texto visible: si no, salta
        label-content-name-mismatch (WCAG 2.5.3). */
-    fab.setAttribute("aria-label", "Pide tu boceto: abre el asistente de " + EMPRESA);
+    fab.setAttribute("aria-label", "Habla con el agente IA de " + EMPRESA);
     fab.setAttribute("aria-expanded", "false");
-    fab.innerHTML = IC_SPARK + "<span>Pide tu boceto</span>";
+    fab.innerHTML = IC_SPARK + "<span>Habla con el agente</span>";
 
     var panel = document.createElement("div");
     panel.className = "nt-panel";
@@ -211,7 +207,7 @@
   }
 
   /*
-   * El hero ya tiene su botón "Pide tu boceto" abajo a la derecha, justo
+   * El hero ya tiene su botón "Habla con el agente" abajo a la derecha, justo
    * donde va el FAB. Mientras el hero esté en pantalla el FAB se oculta, y
    * aparece al pasar de largo. Sin hero (o sin IntersectionObserver) se
    * muestra siempre.
@@ -312,36 +308,35 @@
 
   /* --------------------------- Máquina de estados --------------------------- */
   function start() {
-    botMsg("Hola, soy Neo, el asistente del estudio.\nTe preparo una propuesta en un minuto. ¿Qué te quieres tatuar?", function () {
-      step = "estilo";
-      options(ESTILOS.map(function (s) { return { label: s.label, value: s.id }; }), pickEstilo);
-    });
+    botMsg("Hola, soy Neo, el asistente del estudio. Puedo resolverte dudas.\n¿Qué quieres saber?", ofrecerDudas);
   }
 
-  function pickEstilo(id) {
-    var e = ESTILOS.filter(function (s) { return s.id === id; })[0] || ESTILOS[4];
-    lead.estilo = e.label;
-    botMsg("Buena elección. ¿En qué zona del cuerpo lo quieres?", function () {
-      step = "zona";
-      options(ZONAS, pickZona);
-    });
+  /* FASE 1. Dudas aún no vistas + "¿Cómo funciona esto?" al principio,
+     o + "Me interesa para mi negocio" tras la primera respuesta. */
+  function ofrecerDudas() {
+    step = "dudas";
+    var opts = DUDAS.filter(function (d) { return vistas.indexOf(d.id) < 0; })
+      .map(function (d) { return { label: d.label, value: d.id }; });
+    opts.push(vistas.length
+      ? { label: "Me interesa para mi negocio", value: "pivote" }
+      : { label: "¿Cómo funciona esto?", value: "pivote" });
+    options(opts, pickDuda);
   }
 
-  function pickZona(v) {
-    lead.zona = v;
-    botMsg("Anotado. ¿De qué tamaño hablamos, más o menos?", function () {
-      step = "tamano";
-      options(TAMANOS.concat([
-        { label: "Aún no lo sé", value: "", skip: true }
-      ]), pickTamano);
-    });
+  function pickDuda(id) {
+    if (id === "pivote") { pivota(); return; }
+    var d = DUDAS.filter(function (x) { return x.id === id; })[0];
+    vistas.push(d.id);
+    botMsg(d.texto, vistas.length >= MAX_DUDAS ? pivota : ofrecerDudas);
   }
 
-  function pickTamano(v) {
-    lead.tamano = v;
-    botMsg("Genial. ¿Cómo te llamas?", function () {
-      step = "nombre";
-      showInput("Escribe tu nombre", "text", "name");
+  /* FASE 2. */
+  function pivota() {
+    botMsg(PIVOTE, function () {
+      botMsg("¿Qué tipo de negocio tienes?", function () {
+        step = "negocio";
+        showInput("Ej.: peluquería, clínica, taller…", "text", "off");
+      });
     });
   }
 
@@ -350,12 +345,30 @@
     var val = els.input.value.trim();
     if (!val) return;
 
+    if (step === "negocio") {
+      userMsg(val);
+      hideInput();
+      if (RESERVA.test(val)) {
+        botMsg("Esto es una demo de WhiteMoon: aquí no se reservan tatuajes reales. " +
+          "Si tienes un negocio y quieres un agente así, dime de qué tipo y te llamamos, sin compromiso.", function () {
+          showInput("Ej.: peluquería, clínica, taller…", "text", "off");
+        });
+        return;
+      }
+      lead.negocio = val;
+      botMsg("¿Tu nombre?", function () {
+        step = "nombre";
+        showInput("Escribe tu nombre", "text", "name");
+      });
+      return;
+    }
+
     if (step === "nombre") {
       if (val.length < 2) { showErr("Dime tu nombre, por favor."); return; }
       lead.nombre = val;
       userMsg(val);
       hideInput();
-      botMsg("Encantado, " + val.split(" ")[0] + ". ¿A qué teléfono te escribimos con la propuesta?", function () {
+      botMsg("¿Un teléfono para llamarte, sin compromiso?", function () {
         step = "telefono";
         showInput("6XX XXX XXX", "tel", "tel");
       });
@@ -374,10 +387,8 @@
   }
 
   /*
-   * Cierre: con nombre y teléfono ya capturados se pinta la tarjeta de datos
-   * verificados. No hay CTA de "llámanos": en un estudio de tatuajes no hay
-   * urgencias, la consulta se atiende cuando toca. El input se queda a la
-   * vista pero deshabilitado, para que se entienda que la conversación
+   * Cierre: se envía el lead y Neo confirma en una frase. El input se queda
+   * a la vista pero deshabilitado, para que se entienda que la conversación
    * terminó y no parezca que la web se ha quedado colgada.
    */
   function finish() {
@@ -389,72 +400,26 @@
     els.input.placeholder = "Conversación finalizada";
     els.send.disabled = true;
 
-    var nombreCorto = lead.nombre.split(" ")[0];
-    var card = document.createElement("div");
-    card.className = "nt-done";
-    card.setAttribute("role", "status");
-    card.setAttribute("aria-live", "polite");
-
-    var ic = document.createElement("div");
-    ic.className = "nt-done__ic";
-    ic.setAttribute("aria-hidden", "true");
-    ic.innerHTML = IC_CHECK;
-
-    var box = document.createElement("div");
-    box.className = "nt-done__b";
-
-    var titulo = document.createElement("b");
-    titulo.className = "nt-done__t";
-    titulo.textContent = "Datos recibidos";
-
-    var lista = document.createElement("ul");
-    lista.className = "nt-done__l";
-    [
-      ["Estilo", lead.estilo],
-      ["Zona", lead.zona],
-      ["Tamaño", lead.tamano],
-      ["Nombre", lead.nombre],
-      ["Teléfono", lead.telefono]
-    ].forEach(function (par) {
-      if (!par[1]) return;
-      var li = document.createElement("li");
-      var et = document.createElement("span");
-      et.textContent = par[0] + ": ";
-      li.appendChild(et);
-      li.appendChild(document.createTextNode(par[1]));
-      lista.appendChild(li);
-    });
-
-    var texto = document.createElement("p");
-    texto.className = "nt-done__p";
-    texto.textContent = "Gracias, " + nombreCorto + ". Hemos registrado tu consulta de " +
-      lead.estilo.toLowerCase() + " en " + lead.zona.toLowerCase() + ". Te contactamos en breve.";
-
-    box.appendChild(titulo);
-    box.appendChild(lista);
-    box.appendChild(texto);
-    card.appendChild(ic);
-    card.appendChild(box);
-    els.body.appendChild(card);
-    scroll();
+    botMsg("Perfecto, " + lead.nombre + ". Te llamamos al " + lead.telefono +
+      " para enseñarte cómo sería en tu negocio.");
   }
 
+  /*
+   * PROSPECTO DE AGENCIA, no reserva. origen y sector los fija lead.js
+   * ("demo-tatuajes" / "tatuajes": el sector enruta el aviso). El tipo de
+   * negocio va en 'mensaje' con el prefijo "Tipo de negocio: ", que es lo
+   * que busca tatuajes-notify: si se cambia aquí, cambiarlo allí.
+   */
   function submitLead() {
     if (!window.WhiteMoonLead) {
       console.warn("[Neo] lead.js no está cargado: el lead no se envía.");
       return;
     }
-    var mensaje = [
-      lead.tamano ? "Tamaño: " + lead.tamano : "",
-      lead.zona ? "Zona del cuerpo: " + lead.zona : ""
-    ].filter(Boolean).join(" · ") || "Sin detalle";
-
     return window.WhiteMoonLead.send({
       nombre: lead.nombre,
       telefono: lead.telefono,
-      servicio: lead.estilo,   /* -> columna 'interes' de leads_web */
-      zona: lead.zona,
-      mensaje: mensaje
+      servicio: "Quiere agente IA para su negocio",   /* -> columna 'interes' */
+      mensaje: "Dueño de negocio llegado desde la demo de tatuajes. Tipo de negocio: " + lead.negocio
     });
   }
 
